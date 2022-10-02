@@ -78,27 +78,10 @@ public class HomeController : Controller
         return View(new EditViewModel(
             categories: _context.Categories.ToArray(), transaction: transaction));
     }
-
-    // public async Task<IActionResult> Update(UpdateRequest request)
-    // {
-    //     _context.Transactions.Update(new Transaction
-    //     {
-    //         Id = request.TransactionId,
-    //         Amount = request.Amount,
-    //         CategoryId = request.CategoryId,
-    //         DateTime = request.DateTime.UtcDateTime,
-    //         Description = request.Description
-    //     });
-    //     
-    //     await _context.SaveChangesAsync();
-    //     return RedirectToAction("List", "Home");
-    // }
-
     public IActionResult Privacy()
     {
         return View();
     }
-
     public IActionResult List()
     {
         return View(new ListViewModel(

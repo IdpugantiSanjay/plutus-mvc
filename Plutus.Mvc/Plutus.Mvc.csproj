@@ -60,6 +60,25 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\OFL.txt" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Black.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-BlackItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Bold.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-BoldItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-ExtraBold.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-ExtraBoldItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-ExtraLight.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-ExtraLightItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Italic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Light.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-LightItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Medium.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-MediumItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Regular.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-SemiBold.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-SemiBoldItalic.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-Thin.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\Poppins\Poppins-ThinItalic.ttf" />
     </ItemGroup>
 
     <ItemGroup>

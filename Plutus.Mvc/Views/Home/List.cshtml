@@ -63,7 +63,7 @@
                         </span>
                     </div>
 
-                    <div class="list_item_actions" x-show="highlight == @transaction.Id">
+                    <div class="list_item_actions" x-show="highlight == @transaction.Id" x-cloak x-on:click.outside="highlight = 0">
                         <span x-on:click="(e) => e.stopPropagation()">
                             <a asp-controller="Home" asp-action="Delete" asp-route-id="@transaction.Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24">

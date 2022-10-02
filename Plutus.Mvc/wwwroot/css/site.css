@@ -28,4 +28,6 @@ html {
     cursor: pointer;
 }
 
-
+[x-cloak] {
+    display: none;
+}
