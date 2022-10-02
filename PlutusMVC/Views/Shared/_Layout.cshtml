@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - PlutusMVC</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="https://unpkg.com/open-props"/>
+    <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/open-props/buttons.min.css"/>
+
+    @* <link rel="stylesheet" href="https://unpkg.com/open-props/indigo.min.css"/> *@
+    @* <link rel="stylesheet" href="https://unpkg.com/open-props/indigo-hsl.min.css"/> *@
+    @* <link rel="stylesheet" href="https://unpkg.com/open-props/easings.min.css"/> *@
+    <link rel="stylesheet" href="https://unpkg.com/open-props/animations.min.css"/>
+    @* <link rel="stylesheet" href="https://unpkg.com/open-props/sizes.min.css"/> *@
+    <link rel="stylesheet" href="https://unpkg.com/open-props/gradients.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+    @* <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> *@
+    
+    <script defer src="~/lib/alpine.js"></script>
+</head>
+<body>
+<header>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        <nav class="plutus-navbar">
+            <ol>
+                <li>
+                    <a href="/">Home</a>
+                </li> 
+                <li>
+                    <a href="/Home/List">Transactions</a>
+                </li> 
+            </ol>
+        </nav>
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+</footer>
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

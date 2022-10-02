@@ -1,0 +1,73 @@
+﻿@model MVC.Models.Home.IndexViewModel;
+@{
+    ViewData["Title"] = "Create Transaction";
+}
+
+<link rel="stylesheet" href="css/home.css"/>
+
+<div class="section">
+    <div class="form-name">Enter Transaction Details</div>
+    <form x-data="{ show: false }" x-ref="form" asp-controller="Home" asp-action="Save" method="post">
+        <div>
+            <label>
+                <span>Amount</span>
+                <input
+                    type="number"
+                    name="amount"
+                    required>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>
+                    Date
+                </span>
+                <input type="datetime-local" name="dateTime" required>
+            </label>
+        </div>
+
+        <div>
+            <label for="categorySelect">
+                <span>
+                    Category
+                </span>
+
+                <select id="categorySelect" required name="categoryId">
+                    <option value="">--Select--</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>
+                    Description
+                </span>
+                <textarea name="description" id="" cols="30" rows="5"></textarea>
+            </label>
+        </div>
+
+
+        <div class="form-actions">
+            <button type="submit">Save</button>
+            <input type="reset" value="Reset">
+        </div>
+    </form>
+</div>
+
+
+@* @section Scripts *@
+@* { *@
+@*     <script type="module" src="js/home.js"></script> *@
+@* *@
+@*     <script type="module"> *@
+@*         import {Home} from "./js/home.js"; *@
+@*          *@
+@*         document.querySelector('[name="amount"]').addEventListener('focusout', Home.numbersInput) *@
+@*     </script> *@
+@* } *@

@@ -1,0 +1,69 @@
+@model MVC.Models.Home.EditViewModel;
+
+@{
+    ViewBag.Title = "Edit Transaction";
+    Layout = "_Layout";
+}
+
+
+<link rel="stylesheet" href="~/css/home.css"/>
+
+<div class="section">
+    <div class="form-name">Edit Transaction Details</div>
+    <form x-data="{ show: false }" asp-controller="Home" asp-action="Save" method="post" asp-route-id="@Model.Transaction.Id">
+        <div>
+            <label>
+                <span>Amount</span>
+                <input
+                    type="number"
+                    name="amount"
+                    value="@Model.Transaction.Amount"
+                    required>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>
+                    Date
+                </span>
+                <input type="datetime-local" name="dateTime" value="@Model.Transaction.DateTime.ToString("s")" required>
+            </label>
+        </div>
+
+        <div>
+            <label for="categorySelect">
+                <span>
+                    Category
+                </span>
+
+                <select id="categorySelect" required name="categoryId">
+                    <option value="">--Select--</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id" selected="@Model.Transaction.CategoryId == category.Id ? true : false">@category.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>
+                    Description
+                </span>
+                <textarea name="description" id="" cols="30" rows="5">@Model.Transaction.Description</textarea>
+            </label>
+        </div>
+
+
+        <div class="form-actions">
+            <button type="submit">Save</button>
+            <button type="reset">
+                <a asp-controller="Home" asp-action="List" class="cancel-link">
+                    Cancel
+                </a>
+            </button>
+        </div>
+    </form>
+</div>

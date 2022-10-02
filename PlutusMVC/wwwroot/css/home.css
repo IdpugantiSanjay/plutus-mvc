@@ -1,0 +1,60 @@
+form {
+    display: flex;
+    flex-direction: column;
+    
+    row-gap: 10px;
+    justify-content: center;
+    
+    align-items: start;
+    
+    box-shadow: var(--shadow-2);
+    border-radius: var(--radius-2);
+    
+    background-color: white;
+    padding: 25px;
+
+    width: 100%;
+    max-width: max(600px, calc(30% - 40px));
+
+    animation:
+            var(--animation-scale-down) reverse,
+            var(--animation-fade-out) reverse;
+    animation-timing-function: var(--ease-squish-5);
+    animation-duration: .3s;
+}
+
+.form-name {
+    font-size: var(--font-size-4);
+    font-weight: var(--font-weight-6);
+
+    background: var(--gradient-17);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+textarea {
+    resize: none;
+}
+
+
+label {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+form > div {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+}
+
+.cancel-link {
+    text-decoration: none;
+    color: var(--red-6);
+}
