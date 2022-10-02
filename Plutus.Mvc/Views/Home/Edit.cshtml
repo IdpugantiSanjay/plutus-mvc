@@ -41,7 +41,14 @@
                     <option value="">--Select--</option>
                     @foreach (var category in Model.Categories)
                     {
-                        <option value="@category.Id" selected="@Model.Transaction.CategoryId == category.Id ? true : false">@category.Name</option>
+                        @if (category.Id == @Model.Transaction.CategoryId)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
                     }
                 </select>
             </label>
