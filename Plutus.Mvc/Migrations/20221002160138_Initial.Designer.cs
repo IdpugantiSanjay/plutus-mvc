@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MVC.Migrations
 {
     [DbContext(typeof(PlutusDbContext))]
-    [Migration("20221001110640_Initial")]
+    [Migration("20221002160138_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace MVC.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PlutusMVC.Categories.Category", b =>
+            modelBuilder.Entity("MVC.Categories.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace MVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PlutusMVC.Transactions.Transaction", b =>
+            modelBuilder.Entity("MVC.Transactions.Transaction", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace MVC.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTimeOffset>("DateTime")
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -100,9 +100,9 @@ namespace MVC.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("PlutusMVC.Transactions.Transaction", b =>
+            modelBuilder.Entity("MVC.Transactions.Transaction", b =>
                 {
-                    b.HasOne("PlutusMVC.Categories.Category", "Category")
+                    b.HasOne("MVC.Categories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

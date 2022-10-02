@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlutusMVC", "PlutusMVC\PlutusMVC.csproj", "{BB1BD8EB-7215-487B-9EE3-64FD3F1A0826}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plutus.Mvc", "Plutus.Mvc\Plutus.Mvc.csproj", "{BB1BD8EB-7215-487B-9EE3-64FD3F1A0826}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FAC8FB00-648E-46B7-9814-F8FD4A9DB8A9}"
 EndProject
