@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVC.Categories;
 using MVC.Database;
 using MVC.Models;
 using MVC.Models.Home;
@@ -13,16 +14,19 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly PlutusDbContext _context;
 
+    private readonly Lazy<Category[]> _categories;
+
     public HomeController(ILogger<HomeController> logger, PlutusDbContext context)
     {
         _logger = logger;
         _context = context;
+        _categories = new Lazy<Category[]>(() => _context.Categories.ToArray());
     }
 
     public IActionResult Index()
     {
         return View(new IndexViewModel(
-            _context.Categories.ToArray()
+            _categories.Value
         ));
     }
 
@@ -76,7 +80,7 @@ public class HomeController : Controller
     {
         var transaction = await _context.Transactions.FirstAsync(t => t.Id == id);
         return View(new EditViewModel(
-            categories: _context.Categories.ToArray(), transaction: transaction));
+            categories: _categories.Value, transaction: transaction));
     }
     public IActionResult Privacy()
     {
