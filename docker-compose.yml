@@ -1,0 +1,20 @@
+version: 3.8
+
+services:
+  plutus-mvc:
+    restart: always
+    container_name: plutus-mvc
+    image: "${DOCKER_REGISTRY-}isanjay112/plutus-mvc:latest"
+    ports:
+      - "9090:80"
+    env_file:
+      - .env
+  watchtower:
+    restart: always
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+    command: --interval 60 plutus-mvc
