@@ -20,12 +20,15 @@ html {
 }
 
 .plutus-navbar ol {
+    padding: 0;
     list-style-type: none;
 }
 
 .plutus-navbar li {
+    padding: 0;
     display: inline-block;
     cursor: pointer;
+    margin-right: 1rem;
 }
 
 [x-cloak] { display: none !important; }
