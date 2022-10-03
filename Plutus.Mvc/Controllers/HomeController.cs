@@ -82,10 +82,50 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult List()
+    public IActionResult List(string? query, string? sortBy)
     {
+        var transactions = _context.Transactions.AsQueryable();
+        switch (sortBy?.ToLower())
+        {
+            case "date asc":
+                transactions = transactions.OrderBy(t => t.DateTime);
+                break;
+            case "date desc":
+                transactions = transactions.OrderByDescending(t => t.DateTime);
+                break;
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            transactions = transactions.Where(t => EF.Functions.ILike(t.Description!, $"%{query}%"));
+        }
+
+        var transactionsGroupedByMonthYear = transactions
+                .Include(t => t.Category)
+                .AsEnumerable()
+                .GroupBy(g => g.DateTime.ToString("Y"))
+                .ToDictionary(x => x.Key, g => g.ToList())
+            ;
+
+        var sortedMonthYear = transactionsGroupedByMonthYear.Keys.OrderByDescending(DateTime.Parse);
+
+        SortedDictionary<(int SequenceNumber, string MonthYear), Transaction[]>
+            transactionsGroupedByMonth =
+                new();
+
+        var sequenceNumber = 0;
+        foreach (var monthYear in sortedMonthYear)
+        {
+            transactionsGroupedByMonth[(sequenceNumber++, monthYear)] =
+                transactionsGroupedByMonthYear[monthYear].ToArray();
+        }
+
         return View(new ListViewModel(
-            Transactions: _context.Transactions.Include(t => t.Category).ToArray()
+            TransactionsGrouped: transactionsGroupedByMonth,
+            new[] { "Date Asc", "Date Desc" },
+            query,
+            sortBy
         ));
     }
 
@@ -93,6 +133,6 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel
-        { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

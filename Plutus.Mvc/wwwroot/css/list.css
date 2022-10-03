@@ -6,6 +6,38 @@
     animation-duration: .3s;
 }
 
+.list_filter {
+    margin-top: 5px;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    column-gap: 20px;
+    padding: 0 15px;
+    color: var(--grape-9);
+    height: 40px;
+}
+
+[filters] {
+    display: flex;
+    gap: 1rem;
+}
+
+[name="sortBy"] {
+    flex: 1;
+    color: initial;
+}
+
+input[name="query"] {
+    flex: 1;
+    color: initial;
+}
+
+.list_filter_icon {
+    cursor: pointer;
+    grid-column-start: 2;
+    display: flex;
+}
+
 .list_item {
     box-shadow: var(--shadow-2);
     border-radius: var(--radius-2);
@@ -79,6 +111,21 @@
     opacity: 0.2;
 }
 
+.month-year {
+    display: flex;
+    padding: 0.5rem;
+    justify-content: space-between;
+}
+
+.stats {
+    color: var(--grape-9);
+    display: flex;
+    gap: 1rem;
+}
+
+.stats div {
+    display: flex;
+}
 
 .nothing {
     box-shadow: var(--shadow-1);
@@ -93,5 +140,5 @@
 }
 
 .create-transaction {
-    
+
 }
