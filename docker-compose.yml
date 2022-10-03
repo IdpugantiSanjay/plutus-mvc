@@ -17,4 +17,4 @@ services:
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_INCLUDE_RESTARTING=true
-    command: --interval 60 plutus-mvc
+    command: --interval 180 plutus-mvc
