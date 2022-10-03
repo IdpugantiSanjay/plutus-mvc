@@ -8,9 +8,9 @@ public class Transaction
 
     public decimal Amount { get; init; }
 
-    public int CategoryId { get; set; }
+    public int CategoryId { get; init; }
 
-    public DateTime DateTime { get; set; }
+    public DateTime DateTime { get; init; }
     
     public string? Description { get; init; }
 

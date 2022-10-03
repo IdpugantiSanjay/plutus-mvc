@@ -1,4 +1,10 @@
-.list_container {}
+.list_container {
+    animation:
+            var(--animation-scale-down) reverse,
+            var(--animation-fade-out) reverse;
+    animation-timing-function: var(--ease-squish-5);
+    animation-duration: .3s;
+}
 
 .list_item {
     box-shadow: var(--shadow-2);
