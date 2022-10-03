@@ -27,6 +27,7 @@ public class PlutusDbContext : DbContext
             new () { Id = 4, Name = "Online Shopping" },
             new () { Id = 5, Name = "Restaurant" },
             new () { Id = 6, Name = "Mutual Funds" },
+            new () { Id = 7, Name = "Groceries" },
         });
     }
 }
