@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Categories;
@@ -15,7 +15,8 @@ public class HomeController : Controller
     private readonly PlutusDbContext _context;
     private readonly Category[] _categories;
 
-    public HomeController(ILogger<HomeController> logger, PlutusDbContext context, Category[] categories)
+    public HomeController(ILogger<HomeController> logger, PlutusDbContext context,
+        Category[] categories)
     {
         _logger = logger;
         _context = context;
@@ -29,7 +30,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Save([FromForm] CreateRequest request, [FromRoute] int? id)
     {
-
         if (id.HasValue)
         {
             _context.Transactions.Update(new Transaction
@@ -57,10 +57,12 @@ public class HomeController : Controller
         return RedirectToAction(actionName: "List");
     }
 
-
     public async Task<IActionResult> Delete(int id)
     {
-        if (id <= 0) return BadRequest("Invalid TransactionId");
+        if (id <= 0)
+        {
+            return BadRequest("Invalid TransactionId");
+        }
 
         _context.Transactions.Remove(new Transaction
         {
@@ -72,17 +74,18 @@ public class HomeController : Controller
         return RedirectToAction(actionName: "List");
     }
 
-
     public async Task<IActionResult> Edit(int id)
     {
         var transaction = await _context.Transactions.FirstAsync(t => t.Id == id);
         return View(new EditViewModel(
             categories: _categories, transaction: transaction));
     }
+
     public IActionResult Privacy()
     {
         return View();
     }
+
     public IActionResult List()
     {
         return View(new ListViewModel(
@@ -93,6 +96,7 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel
+            { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
