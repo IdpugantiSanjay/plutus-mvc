@@ -11,14 +11,11 @@ namespace MVC.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly PlutusDbContext _context;
     private readonly Category[] _categories;
 
-    public HomeController(ILogger<HomeController> logger, PlutusDbContext context,
-        Category[] categories)
+    public HomeController(PlutusDbContext context, Category[] categories)
     {
-        _logger = logger;
         _context = context;
         _categories = categories;
     }
@@ -70,7 +67,6 @@ public class HomeController : Controller
         });
 
         await _context.SaveChangesAsync();
-
         return RedirectToAction(actionName: "List");
     }
 
@@ -97,6 +93,6 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel
-            { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
