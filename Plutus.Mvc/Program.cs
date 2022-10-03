@@ -13,7 +13,7 @@ builder.Services.AddTransient<PlutusDbContext>();
 builder.Services.AddSingleton(provider =>
 {
     using var scope = provider.CreateScope();
-    var context =  scope.ServiceProvider.GetService<PlutusDbContext>();
+    var context = scope.ServiceProvider.GetService<PlutusDbContext>();
     return context!.Categories.OrderBy(c => c.Name).ToArray();
 });
 

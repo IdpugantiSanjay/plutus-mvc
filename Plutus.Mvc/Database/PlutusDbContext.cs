@@ -7,9 +7,9 @@ namespace MVC.Database;
 public class PlutusDbContext : DbContext
 {
     public DbSet<Transaction> Transactions { get; init; } = null!;
-    
+
     public DbSet<Category> Categories { get; init; } = null!;
-    
+
     public PlutusDbContext(DbContextOptions<PlutusDbContext> options) : base(options)
     {
     }
@@ -22,7 +22,7 @@ public class PlutusDbContext : DbContext
         {
             new () { Id = 1, Name = "Salary" },
             new () { Id = 2, Name = "Refund" },
-            
+
             new () { Id = 3, Name = "Food Delivery" },
             new () { Id = 4, Name = "Online Shopping" },
             new () { Id = 5, Name = "Restaurant" },

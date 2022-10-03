@@ -11,7 +11,7 @@ public class Transaction
     public int CategoryId { get; init; }
 
     public DateTime DateTime { get; init; }
-    
+
     public string? Description { get; init; }
 
     public Category Category { get; init; } = null!;
