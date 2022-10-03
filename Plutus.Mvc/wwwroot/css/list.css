@@ -18,18 +18,19 @@
 }
 
 [filters] {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
     gap: 1rem;
 }
 
 [name="sortBy"] {
-    flex: 1;
     color: initial;
+    min-width: 0;
 }
 
 input[name="query"] {
-    flex: 1;
     color: initial;
+    min-width: 0;
 }
 
 .list_filter_icon {
