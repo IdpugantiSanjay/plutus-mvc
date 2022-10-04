@@ -45,7 +45,7 @@ input[name="query"] {
     padding: 15px 25px;
     background-color: white;
     display: grid;
-    grid-template-columns: 40px minmax(200px, 1fr) minmax(50px, 100px);
+    grid-template-columns: 40px minmax(200px, 1fr) minmax(60px, 100px);
     gap: 15px;
     min-width: 0;
 
