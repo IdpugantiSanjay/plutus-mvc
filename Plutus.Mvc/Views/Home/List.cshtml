@@ -1,3 +1,4 @@
+@using System.Globalization
 @model MVC.Models.Home.ListViewModel;
 @{
     ViewBag.Title = "List Transactions";
@@ -45,7 +46,7 @@
             <span>@group.Key.MonthYear</span>
             <div class="stats">
                 <div>
-                    ₹@group.Value.Where(g => g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From").Sum(x => x.Amount)
+                    @group.Value.Where(g => g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From").Sum(x => x.Amount).ToString("C0", new CultureInfo("en-IN"))
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14">
                         <g>
                             <line x1="7" y1="13.5" x2="7" y2="0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 4 7 0.5 3.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline>
@@ -53,7 +54,7 @@
                     </svg>
                 </div>
                 <div>
-                    ₹@group.Value.Where(g => !(g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From")).Sum(x => x.Amount)
+                    @group.Value.Where(g => !(g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From")).Sum(x => x.Amount).ToString("C0", new CultureInfo("en-IN"))
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14">
                         <g>
                             <line x1="7" y1="0.5" x2="7" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 10 7 13.5 3.5 10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline>
@@ -66,7 +67,7 @@
         {
             <div class="list_item" :class="highlight == @transaction.Id ? 'list_item_highlight list_item_show-actions' : ''">
                 <div class="list_item_first-column">
-                    <span class="list_item_category">
+                    <span class="list_item_category @(new[] { "Refund", "Salary", "Interest", "Transferred From" }.Any(c => c == transaction.Category.Name) ? "list_item_category_income" : "" )">
                         @switch (transaction.Category.Name)
                         {
                             case "Food Delivery":
@@ -192,7 +193,7 @@
                 </div>
                 <div class="list_item_amount list_item_third-column">
                     <span>
-                        ₹@transaction.Amount
+                        @transaction.Amount.ToString("C0", new CultureInfo("en-IN"))
                     </span>
                 </div>
 
