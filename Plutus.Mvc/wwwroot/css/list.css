@@ -130,6 +130,21 @@ input[name="query"] {
 
 .stats div {
     display: flex;
+    padding: var(--size-1);
+    font-size: 0.9rem;
+
+    border-radius: var(--radius-2);
+    font-weight: var(--font-weight-6);
+}
+
+.stats div:first-child {
+    background-color: var(--green-0);
+    color: var(--green-9);
+}
+
+.stats div:nth-child(2) {
+    background-color: var(--grape-0);
+    color: var(--grape-9);
 }
 
 .nothing {
