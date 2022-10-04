@@ -121,6 +121,7 @@ input[name="query"] {
     display: flex;
     padding: 0.5rem;
     justify-content: space-between;
+    align-items: baseline;
 }
 
 .stats {
