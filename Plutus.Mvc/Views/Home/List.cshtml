@@ -7,168 +7,236 @@
 <link rel="stylesheet" href="~/css/list.css"/>
 
 <div class="section" x-data="ListComponent()">
-    <div class="list_container">
-        @if (Model.TransactionsGrouped.Any())
-        {
-            <form class="list_filter" asp-controller="Home" asp-action="List" method="GET" x-ref="form">
-                <div x-show="showFilters" x-cloak x-transition filters>
-                    <input
-                        placeholder="Search"
-                        type="text"
-                        name="query"
-                        value="@Model.Query"
-                        >
+<div class="list_container">
+@if (Model.TransactionsGrouped.Any())
+{
+    <form class="list_filter" asp-controller="Home" asp-action="List" method="GET" x-ref="form">
+        <div x-show="showFilters" x-cloak x-transition filters>
+            <input
+                placeholder="Search"
+                type="text"
+                name="query"
+                value="@Model.Query">
 
-                    <select required name="sortBy" x-ref="sortBy" x-on:change=" $refs.form.requestSubmit() ">
-                        @foreach (var sortOption in Model.SortOptions)
-                        {
-                            @if (sortOption == Model.SortBy)
-                            {
-                                <option value="@sortOption" selected>@sortOption</option>
-                            }
-                            else
-                            {
-                                <option value="@sortOption">@sortOption</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="list_filter_icon">
-                    <svg x-on:click=" onFilterIconClick() " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                        <path d="M13.5.5H.5a6.51,6.51,0,0,0,5,6.33V13.5l3-2V6.83A6.51,6.51,0,0,0,13.5.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+            <select required name="sortBy" x-ref="sortBy" x-on:change=" $refs.form.requestSubmit() ">
+                @foreach (var sortOption in Model.SortOptions)
+                {
+                    @if (sortOption == Model.SortBy)
+                    {
+                        <option value="@sortOption" selected>@sortOption</option>
+                    }
+                    else
+                    {
+                        <option value="@sortOption">@sortOption</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="list_filter_icon">
+            <svg x-on:click=" onFilterIconClick() " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                <path d="M13.5.5H.5a6.51,6.51,0,0,0,5,6.33V13.5l3-2V6.83A6.51,6.51,0,0,0,13.5.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </div>
+    </form>
+
+    @foreach (var group in Model.TransactionsGrouped)
+    {
+        <div class="month-year">
+            <span>@group.Key.MonthYear</span>
+            <div class="stats">
+                <div>
+                    ₹@group.Value.Where(g => g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From").Sum(x => x.Amount)
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14">
+                        <g>
+                            <line x1="7" y1="13.5" x2="7" y2="0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 4 7 0.5 3.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        </g>
                     </svg>
                 </div>
-            </form>
-
-            @foreach (var group in Model.TransactionsGrouped)
-            {
-                <div class="month-year">
-                    <span>@group.Key.MonthYear</span>
-                    <div class="stats">
-                        <div> ₹@group.Value.Where(g => g.Category.Name is "Salary" or "Refund").Sum(x => x.Amount) <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14"><g><line x1="7" y1="13.5" x2="7" y2="0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 4 7 0.5 3.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline></g></svg> </div>
-                        <div> ₹@group.Value.Where(g => !(g.Category.Name is "Salary" or "Refund")).Sum(x => x.Amount) <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14"><g><line x1="7" y1="0.5" x2="7" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 10 7 13.5 3.5 10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline></g></svg> </div>
-                    </div>
+                <div>
+                    ₹@group.Value.Where(g => !(g.Category.Name is "Salary" or "Refund" or "Interest" or "Transferred From")).Sum(x => x.Amount)
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="14" width="14">
+                        <g>
+                            <line x1="7" y1="0.5" x2="7" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="10.5 10 7 13.5 3.5 10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        </g>
+                    </svg>
                 </div>
-                @foreach (var transaction in group.Value)
-                {
-                    <div class="list_item" :class="highlight == @transaction.Id ? 'list_item_highlight list_item_show-actions' : ''">
-                        <div class="list_item_first-column">
-                            <span class="list_item_category">
-                                @switch (transaction.Category.Name)
-                                {
-                                    case "Food Delivery":
-                                        <svg title="@transaction.Category.Name" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                                            <g>
-                                                <path d="M5.5,5.5h-3a2,2,0,0,0-2,2v4H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5,11.5h1v-7a1,1,0,0,0-1-1h-6a1,1,0,0,0-1,1v5.68" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="6" y1="11.5" x2="8.5" y2="11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><circle cx="4" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><circle cx="10.5" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle>
-                                            </g>
-                                        </svg>
-                                        break;
-                                    case "Salary":
-                                        <svg title="@transaction.Category.Name" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                                            <g>
-                                                <g>
-                                                    <ellipse cx="9" cy="5.5" rx="4.5" ry="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></ellipse><path d="M4.5,5.5v6c0,1.1,2,2,4.5,2s4.5-.9,4.5-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13.5,8.5c0,1.1-2,2-4.5,2s-4.5-.9-4.5-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                                </g>
-                                                <g>
-                                                    <path d="M8.9,1.5A6.77,6.77,0,0,0,5,.5C2.51.5.5,1.4.5,2.5.5,3.09,1.08,3.62,2,4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2,10C1.08,9.62.5,9.09.5,8.5v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2,7C1.08,6.62.5,6.09.5,5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                        break;
-                                    case "Online Shopping":
-                                        <svg title="@transaction.Category.Name" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                                            <g>
-                                                <path d="M5.5,5.5h-3a2,2,0,0,0-2,2v4H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5,11.5h1v-7a1,1,0,0,0-1-1h-6a1,1,0,0,0-1,1v5.68" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="6" y1="11.5" x2="8.5" y2="11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><circle cx="4" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><circle cx="10.5" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle>
-                                            </g>
-                                        </svg>
-                                        break;
-                                    case "Restaurant":
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                                            <g>
-                                                <path d="M.5.5V2.75a2.5,2.5,0,0,0,5,0V.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="3" y1="0.5" x2="3" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><path d="M13.5,13.5a6.5,6.5,0,0,1,0-13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13.5,10.5a3.5,3.5,0,0,1,0-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            </g>
-                                        </svg>
-                                        break;
-                                    case "Mutual Funds":
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
-                                            <g>
-                                                <rect x="0.5" y="0.5" width="13" height="11.5" rx="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></rect><circle cx="8.5" cy="6.25" r="1.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="8.5" y1="3.25" x2="8.5" y2="4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="8.5" y1="8" x2="8.5" y2="9.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.5" y1="6.25" x2="10.25" y2="6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="6.75" y1="6.25" x2="5.5" y2="6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="10.62" y1="4.13" x2="9.74" y2="5.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7.26" y1="7.49" x2="6.38" y2="8.37" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="10.62" y1="8.37" x2="9.74" y2="7.49" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7.26" y1="5.01" x2="6.38" y2="4.13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="3" y1="4.5" x2="3" y2="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2" y1="12" x2="2" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.5" y1="12" x2="11.5" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
-                                            </g>
-                                        </svg>
-                                        break;
-                                    case "Groceries":
-                                        <svg title="@transaction.Category.Name" xmlns="http://www.w3.org/2000/svg" viewBox="0.25 0.25 14 14" height="20" width="20" stroke-width="1">
-                                            <g>
-                                                <path d="M13.5,3A2.5,2.5,0,0,0,11,.5H3A2.5,2.5,0,0,0,1.5,5v7.5a1,1,0,0,0,1,1h9a1,1,0,0,0,1-1V5A2.49,2.49,0,0,0,13.5,3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="8.5" y1="3.5" x2="4.5" y2="7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="9.5" y1="6.5" x2="5.5" y2="10.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
-                                            </g>
-                                        </svg>
-                                        break;
-                                }
-
-                            </span>
-                        </div>
-                        <div class="list_item_second-column" x-on:click="(e) => { listItemClick(e, @transaction.Id) }">
-                            <div class="list_item_description" title="@transaction.Description">
-                                @if (string.IsNullOrEmpty(transaction.Description))
-                                {
-                                    <span>@transaction.Category.Name</span>
-                                }
-                                else
-                                {
-                                    <span> @transaction.Description </span>
-                                }
-                            </div>
-                            <div class="list_item_date">
-                                <time>@transaction.DateTime.ToString("D")</time>
-                            </div>
-                        </div>
-                        <div class="list_item_amount list_item_third-column">
-                            <span>
-                                ₹@transaction.Amount
-                            </span>
-                        </div>
-
-                        <div class="list_item_actions" x-show="highlight == @transaction.Id" x-cloak x-on:click.outside="highlight = 0">
-                            <span x-on:click="(e) => e.stopPropagation()">
-                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@transaction.Id">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24">
-                                        <g>
-                                            <line x1="1" y1="3.5" x2="13" y2="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><path d="M2.5,3.5h9a0,0,0,0,1,0,0v9a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1v-9A0,0,0,0,1,2.5,3.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.5,3.5V3a2.5,2.5,0,0,1,5,0v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="5.5" y1="5.5" x2="5.5" y2="11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="8.5" y1="5.5" x2="8.5" y2="11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
-                                        </g>
-                                    </svg>
-                                </a>
-                            </span>
-                            <span x-on:click="(e) => e.stopPropagation()">
-                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@transaction.Id">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24" title="Edit">
-                                        <path d="M5,12.24.5,13.5,1.76,9,10,.8a1,1,0,0,1,1.43,0L13.2,2.58A1,1,0,0,1,13.2,4Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                </a>
-                            </span>
-                            <span>
-                                <svg @@click="resetHighlight" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24">
-                                    <path d="M13.19,3.05a1.06,1.06,0,0,0,0-1.49L12.44.81A1.06,1.06,0,0,0,11,.81L7,4.76,3.05.81a1.06,1.06,0,0,0-1.49,0l-.75.75a1.06,1.06,0,0,0,0,1.49l4,4L.81,11a1.06,1.06,0,0,0,0,1.49l.75.75a1.06,1.06,0,0,0,1.49,0L7,9.24,11,13.19a1.06,1.06,0,0,0,1.49,0l.75-.75a1.06,1.06,0,0,0,0-1.49L9.24,7Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                }
-            }
-        }
-        else
+            </div>
+        </div>
+        @foreach (var transaction in group.Value)
         {
-            <div class="nothing">
-                <div class="no-transactions">
-                    No Transactions Found
+            <div class="list_item" :class="highlight == @transaction.Id ? 'list_item_highlight list_item_show-actions' : ''">
+                <div class="list_item_first-column">
+                    <span class="list_item_category">
+                        @switch (transaction.Category.Name)
+                        {
+                            case "Food Delivery":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <path d="M5.5,5.5h-3a2,2,0,0,0-2,2v4H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5,11.5h1v-7a1,1,0,0,0-1-1h-6a1,1,0,0,0-1,1v5.68" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="6" y1="11.5" x2="8.5" y2="11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><circle cx="4" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><circle cx="10.5" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Salary":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <g>
+                                            <ellipse cx="9" cy="5.5" rx="4.5" ry="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></ellipse><path d="M4.5,5.5v6c0,1.1,2,2,4.5,2s4.5-.9,4.5-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13.5,8.5c0,1.1-2,2-4.5,2s-4.5-.9-4.5-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </g>
+                                        <g>
+                                            <path d="M8.9,1.5A6.77,6.77,0,0,0,5,.5C2.51.5.5,1.4.5,2.5.5,3.09,1.08,3.62,2,4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2,10C1.08,9.62.5,9.09.5,8.5v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2,7C1.08,6.62.5,6.09.5,5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Online Shopping":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <path d="M5.5,5.5h-3a2,2,0,0,0-2,2v4H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5,11.5h1v-7a1,1,0,0,0-1-1h-6a1,1,0,0,0-1,1v5.68" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="6" y1="11.5" x2="8.5" y2="11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><circle cx="4" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><circle cx="10.5" cy="11.5" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Food & Drinks":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <path d="M.5.5V2.75a2.5,2.5,0,0,0,5,0V.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="3" y1="0.5" x2="3" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><path d="M13.5,13.5a6.5,6.5,0,0,1,0-13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13.5,10.5a3.5,3.5,0,0,1,0-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Mutual Funds":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <rect x="0.5" y="0.5" width="13" height="11.5" rx="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></rect><circle cx="8.5" cy="6.25" r="1.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="8.5" y1="3.25" x2="8.5" y2="4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="8.5" y1="8" x2="8.5" y2="9.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.5" y1="6.25" x2="10.25" y2="6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="6.75" y1="6.25" x2="5.5" y2="6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="10.62" y1="4.13" x2="9.74" y2="5.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7.26" y1="7.49" x2="6.38" y2="8.37" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="10.62" y1="8.37" x2="9.74" y2="7.49" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7.26" y1="5.01" x2="6.38" y2="4.13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="3" y1="4.5" x2="3" y2="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2" y1="12" x2="2" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.5" y1="12" x2="11.5" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Groceries":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.25 0.25 14 14" height="20" width="20" stroke-width="1">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <path d="M13.5,3A2.5,2.5,0,0,0,11,.5H3A2.5,2.5,0,0,0,1.5,5v7.5a1,1,0,0,0,1,1h9a1,1,0,0,0,1-1V5A2.49,2.49,0,0,0,13.5,3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="8.5" y1="3.5" x2="4.5" y2="7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="9.5" y1="6.5" x2="5.5" y2="10.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Internet":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <circle cx="7" cy="10.94" r="1.31" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></circle><path d="M4.53,8a3.49,3.49,0,0,1,5,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.36,6.31a6.55,6.55,0,0,1,9.29,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M.5,4.45a9.19,9.19,0,0,1,13,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Refund":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <polyline points="4.75 0.5 2.25 3 4.75 5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline><path d="M1.75,8.25A5.25,5.25,0,1,0,7,3H2.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                                break;
+                            case "UnAccounted Expense":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <rect x="0.5" y="0.5" width="13" height="13" rx="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M5.5,5.5A1.5,1.5,0,1,1,7,7V8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7,9.5a.75.75,0,1,0,.75.75A.76.76,0,0,0,7,9.5Z" fill="currentColor"></path>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Prepaid Phone Plan":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <polyline points="4.75 7.5 0.5 7.5 0.5 13.5 4.75 13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline><polyline points="9.25 4.5 4.75 4.5 4.75 13.5 9.25 13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline><rect x="9.25" y="0.5" width="4.25" height="13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></rect>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Transferred To":
+                            case "Transferred From":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <line x1="1.5" y1="8.5" x2="9.5" y2="0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="9.5 4 9.5 0.5 9.5 0.5 6 0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline><line x1="12.5" y1="5.5" x2="4.5" y2="13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><polyline points="4.5 10 4.5 13.5 4.5 13.5 8 13.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                                    </g>
+                                </svg>
+                                break;
+                            case "Interest":
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="20" width="20">
+                                    <title>@transaction.Category.Name</title>
+                                    <g>
+                                        <polyline points="9.5 3.5 13.5 3.5 13.5 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></polyline><path d="M13.5,3.5,7.85,9.15a.5.5,0,0,1-.7,0l-2.3-2.3a.5.5,0,0,0-.7,0L.5,10.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                                break;
+                        }
+
+                    </span>
                 </div>
-                <div class="create-transaction">
-                    <a asp-controller="Home" asp-action="Index">
-                        Click here to Create a transaction
-                    </a>
+                <div class="list_item_second-column" x-on:click="(e) => { listItemClick(e, @transaction.Id) }">
+                    <div class="list_item_description" title="@transaction.Description">
+                        @if (string.IsNullOrEmpty(transaction.Description))
+                        {
+                            <span>@transaction.Category.Name</span>
+                        }
+                        else
+                        {
+                            <span> @transaction.Description </span>
+                        }
+                    </div>
+                    <div class="list_item_date">
+                        <time>@transaction.DateTime.ToString("D")</time>
+                    </div>
+                </div>
+                <div class="list_item_amount list_item_third-column">
+                    <span>
+                        ₹@transaction.Amount
+                    </span>
+                </div>
+
+                <div class="list_item_actions" x-show="highlight == @transaction.Id" x-cloak x-on:click.outside="highlight = 0">
+                    <span x-on:click="(e) => e.stopPropagation()">
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@transaction.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24">
+                                <g>
+                                    <line x1="1" y1="3.5" x2="13" y2="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><path d="M2.5,3.5h9a0,0,0,0,1,0,0v9a1,1,0,0,1-1,1h-7a1,1,0,0,1-1-1v-9A0,0,0,0,1,2.5,3.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.5,3.5V3a2.5,2.5,0,0,1,5,0v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><line x1="5.5" y1="5.5" x2="5.5" y2="11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line><line x1="8.5" y1="5.5" x2="8.5" y2="11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></line>
+                                </g>
+                            </svg>
+                        </a>
+                    </span>
+                    <span x-on:click="(e) => e.stopPropagation()">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@transaction.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24" title="Edit">
+                                <path d="M5,12.24.5,13.5,1.76,9,10,.8a1,1,0,0,1,1.43,0L13.2,2.58A1,1,0,0,1,13.2,4Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    </span>
+                    <span>
+                        <svg @@click="resetHighlight" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height="24" width="24">
+                            <path d="M13.19,3.05a1.06,1.06,0,0,0,0-1.49L12.44.81A1.06,1.06,0,0,0,11,.81L7,4.76,3.05.81a1.06,1.06,0,0,0-1.49,0l-.75.75a1.06,1.06,0,0,0,0,1.49l4,4L.81,11a1.06,1.06,0,0,0,0,1.49l.75.75a1.06,1.06,0,0,0,1.49,0L7,9.24,11,13.19a1.06,1.06,0,0,0,1.49,0l.75-.75a1.06,1.06,0,0,0,0-1.49L9.24,7Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
                 </div>
             </div>
         }
+    }
+}
+else
+{
+    <div class="nothing">
+        <div class="no-transactions">
+            No Transactions Found
+        </div>
+        <div class="create-transaction">
+            <a asp-controller="Home" asp-action="Index">
+                Click here to Create a transaction
+            </a>
+        </div>
     </div>
+}
+</div>
 </div>
 
 

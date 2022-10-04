@@ -1,0 +1,62 @@
+
+.import_container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 1rem;
+}
+
+.imported-transaction {
+    margin: 1rem;
+    display: grid;
+    grid-template-areas: "a b c c d";
+    gap: 1rem;
+    place-content: center;
+}
+
+.imported-transaction label {
+    display: flex;
+    flex-direction: column;
+}
+
+.imported-transaction [disabled] {
+    cursor: not-allowed;
+}
+
+.imported-transaction input {
+    min-width: 0;
+}
+
+.imported-transaction select {
+    min-width: 0;
+}
+
+
+@media (max-width: 1240px) {
+    .imported-transaction {
+        grid-template-areas:
+            "a b"
+            "c c"
+            "d d";
+    }
+}
+
+
+@media (max-width: 800px) {
+    .imported-transaction {
+        grid-template-areas:
+            "a"
+            "b"
+            "c"
+            "d"
+    ;
+    }
+}
+
+
+.actions {
+    display: flex;
+    justify-content: center;
+}

@@ -4,11 +4,11 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Plutus.Mvc</title>
-    
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    
+
     <link rel="stylesheet" href="~/lib/css/normalize.min.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/lib/css/open-props.css"  asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/css/open-props.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/lib/css/buttons.min.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/lib/css/animations.min.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/lib/css/easings.min.css" asp-append-version="true"/>
@@ -17,9 +17,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
-    
-     
-    
+
+
     <script defer src="~/lib/alpine.js"></script>
 </head>
 <body>
@@ -31,10 +30,13 @@
             <ol>
                 <li>
                     <a href="/">Home</a>
-                </li> 
+                </li>
                 <li>
                     <a href="/Home/List">Transactions</a>
-                </li> 
+                </li>
+                <li>
+                    <a href="/Home/Import">Import</a>
+                </li>
             </ol>
         </nav>
         @RenderBody()

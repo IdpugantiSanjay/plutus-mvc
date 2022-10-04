@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Categories;
@@ -6,6 +8,7 @@ using MVC.Database;
 using MVC.Models;
 using MVC.Models.Home;
 using MVC.Transactions;
+using System.IO;
 
 namespace MVC.Controllers;
 
@@ -95,10 +98,10 @@ public class HomeController : Controller
                 break;
         }
 
-
         if (!string.IsNullOrWhiteSpace(query))
         {
-            transactions = transactions.Where(t => EF.Functions.ILike(t.Description!, $"%{query}%"));
+            transactions =
+                transactions.Where(t => EF.Functions.ILike(t.Description!, $"%{query}%"));
         }
 
         var transactionsGroupedByMonthYear = transactions
@@ -127,6 +130,96 @@ public class HomeController : Controller
             query,
             sortBy
         ));
+    }
+
+    public async Task<IActionResult> Import([FromForm] IFormFile? statement)
+    {
+        if (statement is not null)
+        {
+            List<string?> headerAndRows = new();
+            using (var reader = new StreamReader(statement.OpenReadStream()))
+            {
+                while (reader.Peek() >= 0)
+                {
+                    var row = await reader.ReadLineAsync();
+                    if (!string.IsNullOrWhiteSpace(row))
+                    {
+                        headerAndRows.Add(row);
+                    }
+                }
+            }
+
+            // Dictionary<string, List<string>> table = new();
+            // foreach (var columnName in headerAndRows[0]!.Split(","))
+            // {
+            //     table.Add(columnName.Trim(), new());
+            // }
+
+            var importedTransaction = new List<ImportedTransaction>();
+            // Date -> 0, Description -> 1, Debit Amount -> 3, Credit Amount -> 4
+            foreach (var rows in headerAndRows.Skip(1)
+                         .Select(r => r!.Split(",").Select(c => c.Trim()).ToArray()))
+            {
+                var date = DateTime.Parse(rows[0], new CultureInfo("en-IN"));
+                var description = rows[1];
+                var cell3 = decimal.Parse(rows[3]);
+                var amount = cell3 > 0 ? -cell3 : decimal.Parse(rows[4]);
+                importedTransaction.Add(new ImportedTransaction(date, description, amount, null));
+            }
+
+            return View(new ImportViewModel(importedTransaction, _categories));
+        }
+
+        return View(new ImportViewModel());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SaveImported([FromForm] IFormCollection? collection)
+    {
+        if (collection is null)
+        {
+            return Ok(collection);
+        }
+
+        List<ProcessedTransaction> transactions = new(collection.Count);
+        foreach (var index in Enumerable.Range(0, collection["dateTime"].Count))
+        {
+            if (!DateTime.TryParse(collection["dateTime"][index],
+                    provider: new CultureInfo("en-IN"), DateTimeStyles.None, out var dateTime))
+            {
+                return BadRequest($"Invalid DateTime at row: {index + 1}");
+            }
+
+            if (!int.TryParse(collection["category"][index], out var categoryId))
+            {
+                return BadRequest($"Invalid Category at row: {index + 1}");
+            }
+
+            if (!decimal.TryParse(collection["amount"][index], out var amount))
+            {
+                return BadRequest($"Invalid Amount value at row: {index + 1}");
+            }
+
+            transactions.Add(
+                new ProcessedTransaction(
+                    dateTime,
+                    collection["description"][index],
+                    amount,
+                    categoryId
+                )
+            );
+        }
+
+        _context.Transactions.AddRange(transactions.Select(t => new Transaction
+        {
+            Amount = Math.Abs(t.Amount),
+            CategoryId = t.CategoryId,
+            Description = t.Description,
+            DateTime = t.DateTime.UtcDateTime
+        }));
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction(actionName: "List");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

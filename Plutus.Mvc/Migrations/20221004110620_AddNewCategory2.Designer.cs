@@ -3,6 +3,7 @@ using System;
 using MVC.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MVC.Migrations
 {
     [DbContext(typeof(PlutusDbContext))]
-    partial class PlutusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221004110620_AddNewCategory2")]
+    partial class AddNewCategory2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,21 +90,6 @@ namespace MVC.Migrations
                         {
                             Id = 10,
                             Name = "Prepaid Phone Plan"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Misc Expenses"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Transferred To"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Transferred From"
                         });
                 });
 

@@ -1,0 +1,83 @@
+@model MVC.Models.Home.ImportViewModel
+
+@{
+    // ViewBag.Title = "Import Statement";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/import.css">
+
+<div class="import_container">
+    @if (Model.ImportedTransactions is null)
+    {
+        <form asp-controller="Home" asp-action="Import" enctype="multipart/form-data" method="post">
+            <div>
+                <label for="upload">
+                    <input id="upload" type="file" required name="statement">
+                </label>
+            </div>
+            <div>
+                <button type="submit">Process</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <form>
+            @foreach (var trx in Model.ImportedTransactions)
+            {
+                <fieldset class="imported-transaction">
+                    <div class="dateTime-form-field">
+                        <label>
+                            <span>
+                                Date
+                            </span>
+                            <input type="datetime-local" name="dateTime" value="@trx.DateTime.ToString("s")" readonly>
+                        </label>
+                    </div>
+
+                    <div class="amount-form-field">
+                        <label>
+                            <span>Amount</span>
+                            <input
+                                type="number"
+                                name="amount"
+                                value="@trx.Amount"
+                                readonly>
+                        </label>
+                    </div>
+
+
+                    <div class="description-form-field">
+                        <label>
+                            <span>
+                                Description
+                            </span>
+                            <input  name="description" required type="text" value="@trx.Description"/>
+                        </label>
+                    </div>
+
+                    <div class="category-form-field">
+                        <label for="categorySelect">
+                            Category
+                            <select id="categorySelect" name="category">
+                                <option value="" required selected>--Select--</option>
+                                @foreach (var category in Model!.Categories!)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                        </label>
+                    </div>
+
+                </fieldset>
+            }
+
+            <div class="actions">
+                <button type="submit" asp-action="SaveImported" formmethod="post">Save</button>
+            </div>
+        </form>
+    }
+</div>
+
+

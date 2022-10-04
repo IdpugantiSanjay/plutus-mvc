@@ -119,7 +119,6 @@ input[name="query"] {
 }
 
 .stats {
-    color: var(--grape-9);
     display: flex;
     gap: 1rem;
 }
